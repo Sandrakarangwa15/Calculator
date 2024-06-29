@@ -10,11 +10,11 @@ class SignInScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-            elevation: 3, // Add elevation for a slight shadow effect
+            elevation: 3, 
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
-                mainAxisSize: MainAxisSize.min, // Ensure the card wraps its content tightly
+                mainAxisSize: MainAxisSize.min, 
                 children: [
                   const TextField(
                     decoration: InputDecoration(
@@ -32,8 +32,30 @@ class SignInScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16.0),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // Add your sign-in logic here
+                    },
                     child: const Text('Sign In'),
+                  ),
+                  const SizedBox(height: 16.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Don't have an account?",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // Navigate to the sign-up screen
+                          Navigator.pushNamed(context, '/signup');
+                        },
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

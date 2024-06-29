@@ -51,7 +51,7 @@ class SignUpScreen extends StatelessWidget {
                   const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
-                      // Add your sign-up logic here
+                      
                     },
                     child: const Text(
                       'Sign Up',

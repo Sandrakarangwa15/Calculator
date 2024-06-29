@@ -33,7 +33,7 @@ class SignInScreen extends StatelessWidget {
                   const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
-                      // Add your sign-in logic here
+                      
                     },
                     child: const Text('Sign In'),
                   ),
@@ -47,7 +47,7 @@ class SignInScreen extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
-                          // Navigate to the sign-up screen
+                          
                           Navigator.pushNamed(context, '/signup');
                         },
                         child: const Text(

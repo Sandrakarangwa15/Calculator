@@ -12,6 +12,7 @@ class CalculatorScreen extends StatefulWidget {
 class _CalculatorScreenState extends State<CalculatorScreen> {
   String output = "0";
   String _output = "0";
+  String expression = "";
   double num1 = 0.0;
   double num2 = 0.0;
   String operand = "";
@@ -20,6 +21,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     setState(() {
       if (buttonText == "CLEAR") {
         _output = "0";
+        expression = "";
         num1 = 0.0;
         num2 = 0.0;
         operand = "";
@@ -30,23 +32,21 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           buttonText == "%") {
         num1 = double.parse(output);
         operand = buttonText;
+        expression = output + " " + operand;
         _output = "0";
       } else if (buttonText == "=") {
         num2 = double.parse(output);
+        expression += " " + output + " =";
 
         if (operand == "+") {
           _output = (num1 + num2).toString();
-        }
-        if (operand == "-") {
+        } else if (operand == "-") {
           _output = (num1 - num2).toString();
-        }
-        if (operand == "x") {
+        } else if (operand == "x") {
           _output = (num1 * num2).toString();
-        }
-        if (operand == "/") {
+        } else if (operand == "/") {
           _output = (num1 / num2).toString();
-        }
-        if (operand == "%") {
+        } else if (operand == "%") {
           _output = (num1 % num2).toString();
         }
 
@@ -66,9 +66,17 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       } else if (buttonText == "√x") {
         num1 = double.parse(output);
         _output = (num1 >= 0 ? sqrt(num1) : double.nan).toString();
+        expression = "√($output)";
       } else if (buttonText == "x²") {
         num1 = double.parse(output);
         _output = (num1 * num1).toString();
+        expression = "($output)²";
+      } else if (buttonText == "DEL") {
+        if (_output.length > 1) {
+          _output = _output.substring(0, _output.length - 1);
+        } else {
+          _output = "0";
+        }
       } else {
         if (_output == "0") {
           _output = buttonText;
@@ -117,17 +125,33 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           Container(
             alignment: Alignment.centerRight,
             padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Text(
-                output,
-                style: GoogleFonts.notoSerif(
-                  fontSize: 48.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Text(
+                    expression,
+                    style: GoogleFonts.notoSerif(
+                      fontSize: 24.0,
+                      color: Colors.white70,
+                    ),
+                    maxLines: 1,
+                  ),
                 ),
-                maxLines: 1,
-              ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Text(
+                    output,
+                    style: GoogleFonts.notoSerif(
+                      fontSize: 48.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    maxLines: 1,
+                  ),
+                ),
+              ],
             ),
           ),
           const Divider(color: Colors.white70),
@@ -135,7 +159,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                buildButtonRow(["x²", "√x", "CLEAR", "/"]),
+                buildButtonRow(["x²", "DEL", "CLEAR", "/"]),
                 buildButtonRow(["7", "8", "9", "x"]),
                 buildButtonRow(["4", "5", "6", "-"]),
                 buildButtonRow(["1", "2", "3", "+"]),

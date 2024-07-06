@@ -15,7 +15,7 @@ void main() async {
   await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: 'AIzaSyB6ByTWR3L_NWUyhQKdwuiSV1QZy2HWXuQ', 
-      appId: '1:385344616624:android:be93fc3def52429ec02375', 
+      appId: 'confidential', 
       messagingSenderId: '385344616624', 
       projectId: 'authentication-a0a98'  
     )

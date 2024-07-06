@@ -1,90 +1,42 @@
-import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 class ConnectivityChecker {
-  final Connectivity _connectivity = Connectivity();
-  ConnectivityResult? _previousResult;
-
-  void initialize(BuildContext context) {
-    _checkInitialConnectivity(context);
-    _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
-      if (_previousResult != result) {
-        _showConnectivityMessage(result, context);
-        _previousResult = result;
-      }
+  ConnectivityChecker() {
+    // Initialize connectivity monitoring
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      _handleConnectivityChange(result);
     });
   }
 
-  void _checkInitialConnectivity(BuildContext context) async {
-    try {
-      ConnectivityResult result = await _connectivity.checkConnectivity();
-      _showConnectivityMessage(result, context);
-      _previousResult = result;
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to check connectivity: $e")),
-      );
-    }
+  void _handleConnectivityChange(ConnectivityResult result) {
+  switch (result) {
+    case ConnectivityResult.none:
+      _showToast('No Internet Connection');
+      break;
+    case ConnectivityResult.mobile:
+    case ConnectivityResult.wifi:
+      _showToast('Connected to Internet');
+      break;
+    default:
+      _showToast('Unknown Connectivity');
+      break;
   }
+}
 
-  void _showConnectivityMessage(ConnectivityResult result, BuildContext context) {
-    String message;
-    if (result == ConnectivityResult.mobile) {
-      message = "Connected to mobile network";
-    } else if (result == ConnectivityResult.wifi) {
-      message = "Connected to WiFi";
-    } else {
-      message = "No internet connection";
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
+  void _showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.grey,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
-}
 
-// Example usage in a Flutter app
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Connectivity Checker',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final ConnectivityChecker _connectivityChecker = ConnectivityChecker();
-
-  @override
-  void initState() {
-    super.initState();
-    _connectivityChecker.initialize(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Connectivity Checker'),
-      ),
-      body: Center(
-        child: Text('Check your connectivity status.'),
-      ),
-    );
-  }
+  void initialize(BuildContext context) {}
 }

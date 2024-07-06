@@ -20,7 +20,7 @@ class BatteryChecker {
   void _startMonitoringBatteryLevel(BuildContext context) {
     _timer = Timer.periodic(const Duration(seconds: 10), (_) async {
       int batteryLevel = await _battery.batteryLevel;
-      if (batteryLevel == 95) {
+      if (batteryLevel == 90) {
         _showNotification(context);
         _stopMonitoringBatteryLevel();
       }
@@ -33,11 +33,11 @@ class BatteryChecker {
 
   void _showNotification(BuildContext context) async {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Battery level reached 95%')),
+      const SnackBar(content: Text('Battery level reached 90%')),
     );
 
     // Play a sound
     final player = AudioCache();
-    await player.play('assets/sounds/notification.mp3');
+    // await player.play('assets/sounds/notification.mp3');
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "385344616624",
+    "project_id": "authentication-a0a98",
+    "storage_bucket": "authentication-a0a98.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:385344616624:android:be93fc3def52429ec02375",
+        "android_client_info": {
+          "package_name": "com.example.calculator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6ByTWR3L_NWUyhQKdwuiSV1QZy2HWXuQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

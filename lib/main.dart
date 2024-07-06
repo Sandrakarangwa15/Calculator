@@ -6,12 +6,28 @@ import 'signup.dart';
 import 'calculatorscreen.dart';
 import 'theme.dart';
 import 'connectivity_checker.dart';
-import 'battery_checker.dart';  
+import 'battery_checker.dart';
+import 'package:firebase_core/firebase_core.dart';
+// import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final themeProvider = theme(ThemeData.dark());
-  await themeProvider.getTheme();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: 'AIzaSyB6ByTWR3L_NWUyhQKdwuiSV1QZy2HWXuQ', 
+      appId: '1:385344616624:android:be93fc3def52429ec02375', 
+      messagingSenderId: '385344616624', 
+      projectId: 'authentication-a0a98'  
+    )
+  );
+
+  // Initialize theme provider
+  final themeProvider = theme(ThemeData.dark()); // Example function to initialize theme provider
+
+  // Optionally, await for theme initialization
+  await themeProvider.getTheme(); // Ensure theme is loaded before running the app
+  
+
   runApp(
     ChangeNotifierProvider.value(
       value: themeProvider,
@@ -19,7 +35,6 @@ void main() async {
     ),
   );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -117,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.pop(context);
                 _onItemTapped(0);
               },
+              selected: _selectedIndex == 0,
             ),
             ListTile(
               leading: const Icon(Icons.person_add),
@@ -125,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.pop(context);
                 _onItemTapped(1);
               },
+              selected: _selectedIndex == 1,
             ),
             ListTile(
               leading: const Icon(Icons.calculate),
@@ -133,6 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.pop(context);
                 _onItemTapped(2);
               },
+              selected: _selectedIndex == 2,
             ),
             const Divider(),
             ListTile(
@@ -179,8 +197,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: themeProvider.bottomNavSelectedItemColor,
-        unselectedItemColor: themeProvider.bottomNavUnselectedItemColor,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),
     );

@@ -1,42 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'signin.dart';
 import 'signup.dart';
 import 'calculatorscreen.dart';
+import 'theme.dart';
+import 'connectivity_checker.dart';
+import 'battery_checker.dart';  
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final themeProvider = theme(ThemeData.dark());
+  await themeProvider.getTheme();
+  runApp(
+    ChangeNotifierProvider.value(
+      value: themeProvider,
+      child: const MyApp(),
+    ),
+  );
 }
 
+
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Simple Calculator',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        textTheme: TextTheme(
-          bodyLarge: GoogleFonts.notoSerif(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+    return Consumer<theme>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'Simple Calculator',
+          theme: themeProvider.themeData.copyWith(
+            textTheme: TextTheme(
+              bodyLarge: GoogleFonts.notoSerif(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: themeProvider.themeData.brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+              ),
+              bodyMedium: GoogleFonts.notoSerif(
+                fontSize: 14.0,
+                color: themeProvider.themeData.brightness == Brightness.dark
+                    ? Colors.white70
+                    : Colors.black54,
+              ),
+            ),
           ),
-          bodyMedium: GoogleFonts.notoSerif(
-            fontSize: 14.0,
-            color: Colors.white70,
-          ),
-        ),
-      ),
-      home: const HomeScreen(),
-      debugShowCheckedModeBanner: false,
+          home: const HomeScreen(),
+          debugShowCheckedModeBanner: false,
+        );
+      },
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key});
+  const HomeScreen({super.key});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -44,12 +64,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  final ConnectivityChecker _connectivityChecker = ConnectivityChecker();
+  final BatteryChecker _batteryChecker = BatteryChecker();
 
   final List<Widget> _screens = [
     const SignInScreen(),
     const SignUpScreen(),
     const CalculatorScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _connectivityChecker.initialize(context);
+      _batteryChecker.initialize(context);
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -59,6 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<theme>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -70,9 +103,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text(
+            DrawerHeader(
+              decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+              child: const Text(
                 'Menu',
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
@@ -110,6 +143,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.pop(context);
               },
             ),
+            ListTile(
+              leading: Icon(themeProvider.themeData.brightness == Brightness.dark
+                  ? Icons.light_mode
+                  : Icons.dark_mode),
+              title: Text(themeProvider.themeData.brightness == Brightness.dark
+                  ? 'Light Mode'
+                  : 'Dark Mode'),
+              onTap: () {
+                themeProvider.setTheme(
+                  themeProvider.themeData.brightness == Brightness.dark
+                      ? ThemeData.light()
+                      : ThemeData.dark(),
+                );
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),
@@ -130,8 +179,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.white70,
+        selectedItemColor: themeProvider.bottomNavSelectedItemColor,
+        unselectedItemColor: themeProvider.bottomNavUnselectedItemColor,
         onTap: _onItemTapped,
       ),
     );

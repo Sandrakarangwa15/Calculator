@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 
 class CalculatorScreen extends StatefulWidget {
-  const CalculatorScreen({Key? key});
+ const CalculatorScreen({super.key});
 
   @override
   _CalculatorScreenState createState() => _CalculatorScreenState();
@@ -32,11 +32,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           buttonText == "%") {
         num1 = double.parse(output);
         operand = buttonText;
-        expression = output + " " + operand;
+        expression = "$output $operand";
         _output = "0";
       } else if (buttonText == "=") {
         num2 = double.parse(output);
-        expression += " " + output + " =";
+        expression += " $output =";
 
         if (operand == "+") {
           _output = (num1 + num2).toString();
@@ -61,7 +61,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         if (_output.startsWith("-")) {
           _output = _output.substring(1);
         } else {
-          _output = "-" + _output;
+          _output = "-$_output";
         }
       } else if (buttonText == "√x") {
         num1 = double.parse(output);

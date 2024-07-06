@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "",
+        "mobilesdk_app_id": "1:385344616624:android:be93fc3def52429ec02375",
         "android_client_info": {
           "package_name": "com.example.calculator"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB6ByTWR3L_NWUyhQKdwuiSV1QZy2HWXuQ"
+          "current_key": ""
         }
       ],
       "services": {
